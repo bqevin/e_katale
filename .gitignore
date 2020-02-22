@@ -17,3 +17,5 @@ erl_crash.dump
 
 # Env var file
 /.env
+
+/.elixir_ls
