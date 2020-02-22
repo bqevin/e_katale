@@ -1,5 +1,7 @@
 # EKatale
 
+Let's get shopping! 
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
