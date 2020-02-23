@@ -17,6 +17,15 @@ config :e_katale, EKataleWeb.Endpoint,
   pubsub: [name: EKatale.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+# Configure your database
+config :e_katale, EKatale.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("PG_USERNAME"),
+  password: System.get_env("PG_PASSWORD"),
+  database: System.get_env("PG_DATABASE"),
+  hostname: System.get_env("PG_HOST"),
+  pool_size: 10
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
