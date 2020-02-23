@@ -26,6 +26,11 @@ config :e_katale, EKatale.Repo,
   hostname: System.get_env("PG_HOST"),
   pool_size: 10
 
+# Configure guardian
+config :e_katale, EKataleWeb.Auth.Guardian, 
+  issuer: "e_katale",
+  secret_key: "IMEiOus1vwi9VOmiZ1da+FFojpISjgAyKSoRXCctnXA5BGp10GJWjfJRdNWjo/CX"
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

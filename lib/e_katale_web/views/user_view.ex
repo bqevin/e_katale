@@ -10,12 +10,14 @@ defmodule EKataleWeb.UserView do
     %{data: render_one(user, UserView, "user.json")}
   end
 
-  def render("user.json", %{user: user}) do
+  def render("user.json", %{user: user, token: token}) do
     %{id: user.id,
       first_name: user.first_name,
       last_name: user.last_name,
       phone_number: user.phone_number,
       email: user.email,
-      address: user.address}
+      address: user.address,
+      token: token
+    }
   end
 end
