@@ -1,6 +1,7 @@
 defmodule EKatale.Inventory.Category do
   use Ecto.Schema
   import Ecto.Changeset
+  alias EKatale.Inventory.Product
 
 
   schema "categories" do
