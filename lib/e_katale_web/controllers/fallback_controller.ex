@@ -17,4 +17,10 @@ defmodule EKataleWeb.FallbackController do
     |> put_status(:not_found)
     |> render(EKataleWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, :unauthorised}) do
+    conn
+    |> put_status(:unauthorised)
+    |> render(EKataleWeb.ErrorView, :"401")
+  end
 end
