@@ -11,7 +11,7 @@ defmodule EKataleWeb.CategoryController do
     render(conn, "index.json", categories: categories)
   end
 
-  def create(conn, %{"category" => category_params}) do
+  def create(conn, category_params) do
     with {:ok, %Category{} = category} <- Inventory.create_category(category_params) do
       conn
       |> put_status(:created)

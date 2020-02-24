@@ -16,11 +16,17 @@ defmodule EKataleWeb.Router do
     post("/users/signin", UserController, :signin)
     post("/users/signup", UserController, :create)
 
-    # category resource
-    resources "/categories", CategoryController, except: [:new, :edit]
-
-    # products resource 
-    resources "/products", ProductController, except: [:new, :edit]
+    # category endoints
+    get("/categories", CategoryController, :index)
+    post("/categories", CategoryController, :create)
+    get("/categories/:id", CategoryController, :show)
+    put("/categories/:id", CategoryController, :update)
+    
+    # products endpoints
+    get("/products", ProductController, :index)
+    post("/products", ProductController, :create)
+    get("/products/:id", ProductController, :show)
+    put("products/:id", ProductController, :update)
   end
 
   scope "/api", EKataleWeb do
