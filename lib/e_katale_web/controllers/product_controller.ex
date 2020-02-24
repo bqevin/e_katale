@@ -11,7 +11,7 @@ defmodule EKataleWeb.ProductController do
     render(conn, "index.json", products: products)
   end
 
-  def create(conn, %{"product" => product_params}) do
+  def create(conn, product_params) do
     with {:ok, %Product{} = product} <- Inventory.create_product(product_params) do
       conn
       |> put_status(:created)
