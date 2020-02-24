@@ -10,7 +10,6 @@ defmodule EKatale.Inventory.Product do
     field :name, :string
     field :quantity, :integer
     field :unit_price, :float
-    belongs_to :categories, Category
     timestamps()
   end
 
