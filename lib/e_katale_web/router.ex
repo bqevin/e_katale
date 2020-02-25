@@ -27,6 +27,9 @@ defmodule EKataleWeb.Router do
     post("/products", ProductController, :create)
     get("/products/:id", ProductController, :show)
     put("products/:id", ProductController, :update)
+    
+    # orders endpoints
+    post("/orders/add_to_cart", OrderController, :add_to_cart)
   end
 
   scope "/api", EKataleWeb do
