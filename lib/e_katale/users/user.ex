@@ -1,7 +1,7 @@
 defmodule EKatale.Users.User do
   use Ecto.Schema
   import Ecto.Changeset
-
+  alias EKatale.Orders.Order
 
   schema "users" do
     field :address, :string
@@ -11,15 +11,17 @@ defmodule EKatale.Users.User do
     field :phone_number, :string
     field :encrypted_password, :string
     field :password, :string, virtual: true
+    belongs_to :order, Order, foreign_key: :current_order_id, type: :binary_id
 
     timestamps()
   end
 
+  @fields [:first_name, :last_name, :phone_number, :email, :address, :password]
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:first_name, :last_name, :phone_number, :email, :address, :password])
-    |> validate_required([:first_name, :last_name, :phone_number, :email, :address, :password])
+    |> cast(attrs, [:current_order_id | @fields])
+    |> validate_required(@fields)
     |> validate_format(:email, ~r/^[A-Za-z0-9._-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/)
     |> validate_length(:password, min: 6)
     |> unique_constraint(:email)
