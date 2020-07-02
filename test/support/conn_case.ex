@@ -14,13 +14,14 @@ defmodule EKataleWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  import EKatale.Factory
 
   using do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       import EKataleWeb.Router.Helpers
-
+      import EKatale.Factory
       # The default endpoint for testing
       @endpoint EKataleWeb.Endpoint
     end
@@ -32,7 +33,19 @@ defmodule EKataleWeb.ConnCase do
     unless tags[:async] do
       Ecto.Adapters.SQL.Sandbox.mode(EKatale.Repo, {:shared, self()})
     end
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    
+    if tags[:auth] do
+      user = insert(:user)
+
+      {:ok, token, _claims} = EKataleWeb.Auth.Guardian.encode_and_sign(user)
+
+      conn = Phoenix.ConnTest.build_conn() 
+      |> Plug.Conn.put_req_header("authorization", "Bearer: " <> token)
+
+      {:ok, conn: conn}
+    else
+      {:ok, conn: Phoenix.ConnTest.build_conn()}
+    end
   end
 
 end
