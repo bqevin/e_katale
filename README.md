@@ -7,9 +7,11 @@ To start your Phoenix server:
   * Install dependencies with `mix deps.get`
   * Set up your .env file, use the env_sample file to find required variables
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Start Phoenix endpoint with `mix phx.server`
+  * Start Phoenix endpoint with `source .env` &&` mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+
+To run all tests, use `mix test`
 
 Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
