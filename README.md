@@ -1,6 +1,6 @@
 # EKatale
 
-Let's get shopping! 
+Let's get shopping! This is a simple ecommerce api.
 
 To start your Phoenix server:
 
