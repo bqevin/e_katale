@@ -34,10 +34,11 @@ defmodule EKataleWeb.Router do
     # categories endpoints
     post("/categories", CategoryController, :create)
     put("/categories/:id", CategoryController, :update)
+    delete("/categories/:id", CategoryController, :delete)
 
     # products endpoints
     post("/products", ProductController, :create)
-    put("products/:id", ProductController, :update)
+    put("/products/:id", ProductController, :update)
   end
 end
  

@@ -19,14 +19,15 @@ defmodule EKataleWeb.CategoryControllerTest do
 
   describe "index" do
     test "lists all categories", %{conn: conn} do
-      conn = get conn, category_path(conn, :index)
+      conn = get(conn, "/categories")
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "create category" do
+    @tag :auth
     test "renders category when data is valid", %{conn: conn} do
-      conn = post conn, category_path(conn, :create), category: @create_attrs
+      conn = post(conn, "/admin/categories", @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get conn, category_path(conn, :show, id)
@@ -36,8 +37,9 @@ defmodule EKataleWeb.CategoryControllerTest do
         "name" => "some name"}
     end
 
+    @tag :auth
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, category_path(conn, :create), category: @invalid_attrs
+      conn = post(conn, "/admin/categories", @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -45,19 +47,21 @@ defmodule EKataleWeb.CategoryControllerTest do
   describe "update category" do
     setup [:create_category]
 
+    @tag :auth
     test "renders category when data is valid", %{conn: conn, category: %Category{id: id} = category} do
-      conn = put conn, category_path(conn, :update, category), category: @update_attrs
+      conn = put(conn, "/admin/categories/#{id}", %{category: @update_attrs})
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, category_path(conn, :show, id)
+      conn = get(conn, "/categories/#{id}")
       assert json_response(conn, 200)["data"] == %{
         "id" => id,
         "description" => "some updated description",
         "name" => "some updated name"}
     end
 
-    test "renders errors when data is invalid", %{conn: conn, category: category} do
-      conn = put conn, category_path(conn, :update, category), category: @invalid_attrs
+    @tag :auth
+    test "renders errors when data is invalid", %{conn: conn, category: %Category{id: id} = category} do
+      conn = put(conn, "/admin/categories/#{id}", %{category: @invalid_attrs})
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -65,11 +69,12 @@ defmodule EKataleWeb.CategoryControllerTest do
   describe "delete category" do
     setup [:create_category]
 
-    test "deletes chosen category", %{conn: conn, category: category} do
-      conn = delete conn, category_path(conn, :delete, category)
+    @tag :auth
+    test "deletes chosen category", %{conn: conn, category: %Category{id: id} = category} do
+      conn = delete(conn, "/admin/categories/#{id}")
       assert response(conn, 204)
       assert_error_sent 404, fn ->
-        get conn, category_path(conn, :show, category)
+        get(conn, "/categories/#{id}")
       end
     end
   end
