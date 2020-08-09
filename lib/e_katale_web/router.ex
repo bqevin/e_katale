@@ -9,7 +9,7 @@ defmodule EKataleWeb.Router do
     plug EKataleWeb.Auth.Pipeline
   end
 
-  scope "/api", EKataleWeb do
+  scope "/", EKataleWeb do
     pipe_through :api
 
     # users endpoints
@@ -18,22 +18,27 @@ defmodule EKataleWeb.Router do
 
     # category endoints
     get("/categories", CategoryController, :index)
-    post("/categories", CategoryController, :create)
     get("/categories/:id", CategoryController, :show)
-    put("/categories/:id", CategoryController, :update)
     
     # products endpoints
     get("/products", ProductController, :index)
-    post("/products", ProductController, :create)
     get("/products/:id", ProductController, :show)
-    put("products/:id", ProductController, :update)
-    
-    # orders endpoints
-    post("/orders/add_to_cart", OrderController, :add_to_cart)
+
+    # require authentication for all endpoints below
+    # pipe_through [:auth]
   end
 
-  scope "/api", EKataleWeb do
+  scope "/admin", EKataleWeb do
     pipe_through [:api, :auth]
+
+    # categories endpoints
+    post("/categories", CategoryController, :create)
+    put("/categories/:id", CategoryController, :update)
+    delete("/categories/:id", CategoryController, :delete)
+
+    # products endpoints
+    post("/products", ProductController, :create)
+    put("/products/:id", ProductController, :update)
   end
 end
  

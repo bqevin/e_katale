@@ -4,6 +4,7 @@ defmodule EKataleWeb.UserController do
   alias EKatale.Users
   alias EKatale.Users.User
   alias EKataleWeb.Auth.Guardian
+  alias EKataleWeb.ErrorView
 
   action_fallback EKataleWeb.FallbackController
 
@@ -21,6 +22,11 @@ defmodule EKataleWeb.UserController do
       conn
       |> put_status(:created)
       |> render("user.json", %{user: user, token: token})
+    else
+      {:error, :unauthorised} -> 
+        conn
+        |> put_status(401)
+        |> render(ErrorView, "401.json", %{errors: "Email/Password mismatch"})
     end
   end
 end

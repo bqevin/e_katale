@@ -29,7 +29,11 @@ config :e_katale, EKatale.Repo,
 # Configure guardian
 config :e_katale, EKataleWeb.Auth.Guardian, 
   issuer: "e_katale",
-  secret_key: "IMEiOus1vwi9VOmiZ1da+FFojpISjgAyKSoRXCctnXA5BGp10GJWjfJRdNWjo/CX"
+  secret_key: "IMEiOus1vwi9VOmiZ1da+FFojpISjgAyKSoRXCctnXA5BGp10GJWjfJRdNWjo/CX",
+  ttl: {
+    String.to_integer(System.get_env("TOKEN_TTL")), 
+    String.to_atom(System.get_env("TOKEN_TTL_UNIT"))
+  }
 
 # Configures Elixir's Logger
 config :logger, :console,

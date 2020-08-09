@@ -4,8 +4,14 @@ defmodule EKataleWeb.UserControllerTest do
   alias EKatale.Users
   alias EKatale.Users.User
 
-  @create_attrs %{address: "some address", email: "some email", first_name: "some first_name", last_name: "some last_name", phone_number: "some phone_number"}
-  @update_attrs %{address: "some updated address", email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", phone_number: "some updated phone_number"}
+  @create_attrs %{
+    address: "some address", 
+    email: "email@email.com", 
+    first_name: "some first_name", 
+    last_name: "some last_name", 
+    phone_number: "+256700900800", 
+    password: "password"
+  }
   @invalid_attrs %{address: nil, email: nil, first_name: nil, last_name: nil, phone_number: nil}
 
   def fixture(:user) do
@@ -17,66 +23,30 @@ defmodule EKataleWeb.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  describe "index" do
-    test "lists all users", %{conn: conn} do
-      conn = get conn, user_path(conn, :index)
-      assert json_response(conn, 200)["data"] == []
-    end
-  end
-
   describe "create user" do
     test "renders user when data is valid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @create_attrs
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "address" => "some address",
-        "email" => "some email",
-        "first_name" => "some first_name",
-        "last_name" => "some last_name",
-        "phone_number" => "some phone_number"}
+      conn = post(conn, "/users/signup", %{user: @create_attrs})
+      assert conn.status == 201
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, user_path(conn, :create), user: @invalid_attrs
+      conn = post(conn, "users/signup", %{user: @invalid_attrs})
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
 
-  describe "update user" do
+  describe "signin user" do
     setup [:create_user]
 
-    test "renders user when data is valid", %{conn: conn, user: %User{id: id} = user} do
-      conn = put conn, user_path(conn, :update, user), user: @update_attrs
-      assert %{"id" => ^id} = json_response(conn, 200)["data"]
-
-      conn = get conn, user_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "address" => "some updated address",
-        "email" => "some updated email",
-        "first_name" => "some updated first_name",
-        "last_name" => "some updated last_name",
-        "phone_number" => "some updated phone_number"}
+    test "return user token after signin", %{conn: conn, user: %User{email: email, password: password}} do
+      conn = post(conn, "/users/signin", %{email: email, password: password})
+      response = json_response(conn, 201)
+      assert "token" in Map.keys(response)
     end
 
-    test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = put conn, user_path(conn, :update, user), user: @invalid_attrs
-      assert json_response(conn, 422)["errors"] != %{}
-    end
-  end
-
-  describe "delete user" do
-    setup [:create_user]
-
-    test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete conn, user_path(conn, :delete, user)
-      assert response(conn, 204)
-      assert_error_sent 404, fn ->
-        get conn, user_path(conn, :show, user)
-      end
+    test "renders errors when signin credentials are invalid", %{conn: conn, user: %User{email: email}} do
+      conn = post(conn, "/users/signin", %{email: email, password: "fakepassword"})
+      assert json_response(conn, 401) == %{"code" => 401, "error" => "Email/Password mismatch"}
     end
   end
 
